@@ -2,23 +2,11 @@
 #ifndef RATIONAL_RATIONAL_H_20220309
 #define RATIONAL_RATIONAL_H_20220309
 
-struct Node {
-	Node(const int &value, Node* nxt = nullptr)
-		: val(value), next(nxt) {
-	}
-
-	int val;
-	Node* next;
-
-	int get_value();
-};
-
-
 class QueueR {
 public:
 	QueueR();
 
-	bool empty() const;
+	bool isEmpty() const;
 	int size() const;
 
 	int top();
@@ -26,8 +14,18 @@ public:
 	void pop();
 
 private:
+	struct Node {
+		Node(const int& value, Node* nxt = nullptr)
+			: val(value), next(nxt) {
+		}
+
+		int val;
+		Node* next;
+
+		int get_value();
+	};
+
 	Node* first;
-	Node* last;
 	int _size = 0;
 };
 	

@@ -1,11 +1,12 @@
 #include <queuer/queuer.h>
+#include <iostream>
 
 QueueR::QueueR()
-	: first(nullptr), last(nullptr)
+	: first(nullptr)
 {
 }
 
-bool QueueR::empty() const
+bool QueueR::isEmpty() const
 {
 	return _size == 0;
 }
@@ -26,42 +27,36 @@ void QueueR::push(const int& val)
 	if (_size == 1) {
 		Node* nd = new Node(val, nullptr);
 		first = nd;
-		last = nd;
-		return;
-	}
-
-	if (first->get_value() > val) {
-		Node* nd = new Node(val, first);
-		first = nd;
 		return;
 	}
 
 	Node* temp = first;
-	while (temp->get_value() > val) {
+	Node* last = nullptr;
+	while ((temp != nullptr) && (temp->get_value() < val)) {
+		last = temp;
 		temp = temp->next;
 	}
 
 	Node* nd = new Node(val, temp);
-	last->next = nd;
-	last = nd;
+	if (last != nullptr)
+		last->next = nd;
+	else
+		first = nd;
+	nd->next = temp;
 }
 
 void QueueR::pop()
 {
-	if (first == last) {
-		delete first;
-		first = nullptr;
-		last = nullptr;
+	if (_size == 0) {
 		return;
 	}
 	Node* temp = first->next;
 	delete first;
 	first = temp;
+	_size -= 1;
 }
 
-
-
-int Node::get_value()
+int QueueR::Node::get_value()
 {
 	return val;
 }
