@@ -8,8 +8,10 @@ class QueueP {
 public:
 	QueueP();
 	QueueP(const QueueP& copy);
+	QueueP(QueueP&& copy);
 	~QueueP();
 	QueueP& operator=(const QueueP& rhs);
+	QueueP& operator=(QueueP&& rhs);
 
 	bool isEmpty() const;
 
