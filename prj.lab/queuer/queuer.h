@@ -1,13 +1,15 @@
 #pragma once
-#ifndef RATIONAL_RATIONAL_H_20220309
-#define RATIONAL_RATIONAL_H_20220309
+#ifndef QUEUER_QUEUER_H_20221012
+#define QUEUER_QUEUER_H_20221012
 
 class QueueR {
 public:
 	QueueR();
+	QueueR(const QueueR& copy);
+	~QueueR();
+	QueueR& operator=(const QueueR& rhs);
 
 	bool isEmpty() const;
-	int size() const;
 
 	int top();
 	void push(const int &val);

@@ -1,16 +1,17 @@
-#include <queuer/queuer.h>
+#include <queuep/queuep.h>
 #include <iostream>
+#include <memory>
 
-QueueR::QueueR()
-	: first(nullptr)
+QueueP::QueueP()
+	: first(new Node(0, nullptr))
 {
 }
 
-QueueR::QueueR(const QueueR& copy)
+/*QueueP::QueueP(const QueueP& copy)
 {
 	_size = copy._size;
-	Node* this_temp = first;
-	Node* temp = copy.first;
+	std::unique_ptr<Node> this_temp = std::move(first);
+	std::unique_ptr<Node> temp = std::move(copy.first);
 	this_temp->val = temp->val;
 	temp = temp->next;
 	for (int i = 1; i < _size; i++) {
@@ -19,37 +20,35 @@ QueueR::QueueR(const QueueR& copy)
 		this_temp = this_temp->next;
 		temp = temp->next;
 	}
-	this_temp = nullptr;
-	temp = nullptr;
 }
 
-QueueR::~QueueR()
+QueueP::~QueueP()
 {
 	while (!this->isEmpty())
 		this->pop();
 }
 
-QueueR& QueueR::operator=(const QueueR& rhs)
+QueueP& QueueP::operator=(const QueueP& rhs)
 {
 	if (this != &rhs) {
-		QueueR temp = rhs;
+		QueueP temp = rhs;
 		first = temp.first;
 		_size = temp._size;
 	}
 	return *this;
 }
 
-bool QueueR::isEmpty() const
+bool QueueP::isEmpty() const
 {
 	return _size == 0;
 }
 
-int QueueR::top()
+int QueueP::top()
 {
 	return first->get_value();
 }
 
-void QueueR::push(const int& val)
+void QueueP::push(const int& val)
 {
 	_size += 1;
 	if (_size == 1) {
@@ -73,7 +72,7 @@ void QueueR::push(const int& val)
 	nd->next = temp;
 }
 
-void QueueR::pop()
+void QueueP::pop()
 {
 	if (_size == 0) {
 		return;
@@ -84,7 +83,8 @@ void QueueR::pop()
 	_size -= 1;
 }
 
-int QueueR::Node::get_value()
+int QueueP::Node::get_value()
 {
 	return val;
 }
+*/
