@@ -1,4 +1,6 @@
-add_library(queuep queuep.h queuep.cpp)
-
+add_library(c_queuep STATIC c_queuep.h c_queuep.cpp)
+add_library(queuep queuep.hpp queuep.cpp)
 add_executable(queuep_test queuep_test.cpp)
+add_executable(c_queuep_test c_queuep_test.c)
 target_link_libraries(queuep_test queuep)
+target_link_libraries(c_queuep_test c_queuep)

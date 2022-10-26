@@ -15,9 +15,9 @@ public:
 
 	bool isEmpty() const;
 
-	int top();
+	const int& top();
 	void push(const int &val);
-	void pop();
+	void pop() noexcept;
 
 private:
 	struct Node {
@@ -32,7 +32,6 @@ private:
 	};
 
 	std::unique_ptr<Node> first;
-	int _size = 0;
 };
 
 #endif
