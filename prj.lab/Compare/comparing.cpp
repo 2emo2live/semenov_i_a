@@ -5,16 +5,25 @@
 #include <functional>
 #include "first.cpp"
 #include "second.cpp"
-#include<matplot/matplot.h>
+#include "gen_report.cpp"
+#include <matplot/matplot.h>
+#include <algorithm>
+#include <hpdf.h>
 
 std::mt19937 rng(172517);
 
-double l = 128;
+double l = 16;
+int acc = 3;
+int n_size = 10;
 
 std::pair<double, double> measure_t(std::vector<int> input, std::function<std::pair<double, double> (std::stringstream&)> f) {
 	std::stringstream io;
-	for (int i = 0; i < input.size(); i++)
+	io << std::to_string(input.size());
+	io << '\n';
+	for (int i = 0; i < input.size(); i++) {
 		io << std::to_string(input[i]);
+		io << ' ';
+	}
 	auto t = f(io);
 	return t;
 }
@@ -33,27 +42,30 @@ std::vector<int> generate_data(int n, int m, int M) {
 
 int main() {
 
-	std::vector<double> x = { 1,2,3,4 };
-	matplot::plot(x);
-	matplot::save("barchart.jpg");
-	/*
-	std::function<std::pair<double, double>(std::stringstream&)> first_f = first;
+	/*std::function<std::pair<double, double>(std::stringstream&)> first_f = first;
 	std::function<std::pair<double, double>(std::stringstream&)> second_f = second;
-	std::vector<int> n(10);
-	std::vector<std::vector<std::pair<double, double>>> t_f(10);
-	std::vector<std::vector<std::pair<double, double>>> t_s(10);
-	for (int i = 0; i < 10; i++) {
-		std::uniform_int_distribution<int> n_i(1, 200000);
+	std::vector<int> n(n_size);
+	std::vector<std::vector<std::pair<double, double>>> t_f(n_size);
+	std::vector<std::vector<std::pair<double, double>>> t_s(n_size);
+	int sc = 20;
+	for (int i = 0; i < n_size; i++) {
+		std::uniform_int_distribution<int> n_i(1, sc);
 		n[i] = n_i(rng);
-		int s = 0;
-		for (double k = 1; k >= 1.0 / l; k / 2) {
-			for (int p = 1; p <= l; p * 2) {
-				int M = n[i] / p;
-				int m = k * M;
+		if (sc <= 20000)
+			sc *= 10;
+	}
+	std::sort(n.begin(), n.end());
+	for (int i = 0; i < n_size; i++) {
+		int s = -1;
+		for (double k = 1; k >= 1.0 / l; k /= 2) {
+			for (int p = 1; p <= l; p *= 2) {
+				int M = std::max(n[i] / p, 1);
+				int m = std::max((int)k * M, 1);
 				s += 1;
 				t_f[i].push_back(std::make_pair(0, 0));
 				t_s[i].push_back(std::make_pair(0, 0));
-				for (int j = 0; j < 10; j++) {
+				for (int j = 0; j < acc; j++) {
+					std::cout << p << ' ' << k << ' ' << s << ' ' << j << '\n';
 					std::vector<int> inp(generate_data(n[i], m, M));
 					auto t_fi = measure_t(inp, first_f);
 					auto t_si = measure_t(inp, second_f);
@@ -62,12 +74,27 @@ int main() {
 					t_s[i][s].first += t_si.first;
 					t_s[i][s].second += t_si.second;
 				}
-				t_f[i][s].first /= 10;
-				t_f[i][s].second /= 10;
-				t_s[i][s].first /= 10;
-				t_f[i][s].second /= 10;
-				std::cout << p << ' ' << k << '\n';
+				t_f[i][s].first /= acc;
+				t_f[i][s].second /= acc;
+				t_s[i][s].first /= acc;
+				t_f[i][s].second /= acc;
 			}
 		}
-	}*/
+	}
+	std::vector<double> f_inp_gr(n_size);
+	std::vector<double> f_pr_gr(n_size);
+	std::vector<double> s_inp_gr(n_size);
+	std::vector<double> s_pr_gr(n_size);
+	for (int i = 0; i < n_size; i++) {
+		f_inp_gr[i] = t_f[i][24].first;
+		f_pr_gr[i] = t_f[i][24].second;
+		s_inp_gr[i] = t_s[i][24].first;
+		s_pr_gr[i] = t_s[i][24].second;
+	}
+	matplot::plot(n, f_inp_gr, n, s_inp_gr);
+	matplot::save("input.jpg");
+	matplot::plot(n, f_pr_gr, n, s_pr_gr);
+	matplot::save("process.jpg");*/
+
+	gen_report();
 }
