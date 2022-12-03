@@ -65,7 +65,7 @@ int main() {
 				t_f[i].push_back(std::make_pair(0, 0));
 				t_s[i].push_back(std::make_pair(0, 0));
 				for (int j = 0; j < acc; j++) {
-					std::cout << p << ' ' << k << ' ' << s << ' ' << j << '\n';
+					//std::cout << p << ' ' << k << ' ' << s << ' ' << j << '\n';
 					std::vector<int> inp(generate_data(n[i], m, M));
 					auto t_fi = measure_t(inp, first_f);
 					auto t_si = measure_t(inp, second_f);
@@ -85,16 +85,32 @@ int main() {
 	std::vector<double> f_pr_gr(n_size);
 	std::vector<double> s_inp_gr(n_size);
 	std::vector<double> s_pr_gr(n_size);
-	for (int i = 0; i < n_size; i++) {
-		f_inp_gr[i] = t_f[i][24].first;
-		f_pr_gr[i] = t_f[i][24].second;
-		s_inp_gr[i] = t_s[i][24].first;
-		s_pr_gr[i] = t_s[i][24].second;
-	}
-	matplot::plot(n, f_inp_gr, n, s_inp_gr);
-	matplot::save("input.jpg");
-	matplot::plot(n, f_pr_gr, n, s_pr_gr);
-	matplot::save("process.jpg");*/
+	std::vector<int> steps{0, 4, 16, 24};
+	//p = 2^(st%5), k = 2^(-(st/5))
+	for (int st: steps) {
+		for (int i = 0; i < n_size; i++) {
+			f_inp_gr[i] = t_f[i][st].first;
+			f_pr_gr[i] = t_f[i][st].second;
+			s_inp_gr[i] = t_s[i][st].first;
+			s_pr_gr[i] = t_s[i][st].second;
+		}
+		double k = pow(2, -(int)(st/5));
+		int p = pow(2, (st % 5));
+		matplot::plot(n, f_inp_gr, n, s_inp_gr);
+		matplot::legend({ "first solution", "second solution" });
+		matplot::title("Input with k = " + std::to_string(round(k*10000)/10000) + " and p = " + std::to_string(p));
+		matplot::xlabel("n");
+		matplot::ylabel("time");
+		matplot::save("input" + std::to_string(st) + ".jpg");
 
-	gen_report();
+		matplot::plot(n, f_pr_gr, n, s_pr_gr);
+		matplot::legend({ "first solution", "second solution" });
+		matplot::title("Process with k = " + std::to_string(round(k * 10000) / 10000) + " and p = " + std::to_string(p));
+		matplot::xlabel("n");
+		matplot::ylabel("time");
+		matplot::save("process" + std::to_string(st) + ".jpg");
+	}*/
+	
+	std::vector<int> steps{ 0, 4, 16, 24 };
+	gen_report(steps);
 }
